@@ -1,0 +1,45 @@
+name: nearest_places
+
+services:
+  storage:
+    image: elasticsearch:7.17.22
+    container_name: elastic
+    volumes:
+      - nearest_places:/usr/share/elasticsearch/data
+    ports:
+      - "9200:9200"
+      - "9300:9300"
+    environment:
+      - discovery.type=single-node
+      - xpack.security.enabled=false
+    healthcheck:
+      test: [ "CMD", "curl", "-f", "http://localhost:9200" ]
+      interval: 10s
+      retries: 3
+      start_period: 15s
+      timeout: 5s
+    networks:
+      - local
+
+  server:
+    image: server
+    build:
+      context: .
+    container_name: server
+    pull_policy: never
+    depends_on:
+      storage:
+        condition: service_healthy
+    networks:
+      - local
+    ports:
+      - "8888:8888"
+    env_file:
+      - .env.example
+
+networks:
+  local:
+    driver: bridge
+
+volumes:
+  nearest_places:

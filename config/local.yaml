@@ -1,0 +1,16 @@
+data_path: "datasets/data.csv"
+schema_path: "datasets/schema.json"
+elastic:
+  host: "elastic"
+  port: "9200"
+server:
+  host: ""
+  port: "8888"
+  shutdown_timeout: 5s
+  read_timeout: 10s
+  write_timeout: 10s
+  idle_timeout: 30s
+token:
+  secret: "secret"
+  ttl: 10m
+  skew: 30s
